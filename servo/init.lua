@@ -9,7 +9,8 @@ local ledPin = 4
 local ledState = 0
 
 gpio.mode(ledPin,gpio.OUTPUT)
-pwm.setup(servo_p, 50, duty*1023/1000)
+-- Use 400 Hz to control servo
+pwm.setup(servo_p, 400, duty*1023/1000)
 pwm.start(servo_p)
 
 function updateDuty()
