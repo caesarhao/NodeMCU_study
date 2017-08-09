@@ -15,7 +15,6 @@ function servo_sg90.linearInterpol(angle)
 		ret = servo_sg90.Angle_AX[1]
 	elseif angle >= servo_sg90.Angle_AX[servo_sg90.size] then
 		ret = servo_sg90.Angle_AX[servo_sg90.size]
-	return ret
 	else
 		while angle < servo_sg90.Angle_AX[i]
 			i = i + 1
