@@ -1,7 +1,10 @@
 local sg90_crv = {}
 
 local sg90_crv.Angle_AX =     { 0, 30, 60, 90, 120, 150, 180}
-local sg90_crv.Duty1023_Crv = {27, 43, 58, 71,  88, 105, 123}
+-- 0 -> 0.544 ms -> 2.72% -> 27.8256/1023
+-- 90 -> 1.5 ms -> 7.5% -> 76.725/1023
+-- 180 -> 2.4 ms -> 12% -> 122.76/1023
+local sg90_crv.Duty1023_Crv = {27, 43, 59, 76,  91, 107, 123}
 local sg90_crv.size = 0
 local sg90_crv.persisteFile = "sg90_crv.ref"
 
