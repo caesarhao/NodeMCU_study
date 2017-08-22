@@ -1,46 +1,40 @@
 #! /usr/bin/lua
 -- demo to control servo SG90 using pwm and tmr
-local servo_p = 1 -- control with D1/GPIO5
-local duty = 0 
---local duties = {27, 71, 123}
-local pulse_min = 1.0 -- 1.0 ms for 0
-local pulse_max = 2.0 -- 2.0 ms for 180
-local freq = 50 -- Hz 
-local period = 1000/freq -- ms
-local num = 10
-local pulse_delta = (pulse_max-pulse_min)/num
-local pulse = pulse_min
-local index = 1 
+local servo_sg90 = require "servo_sg90"
 local tmr0 = 0
+local tmr1 = 1
 local ledPin = 4
 local ledState = 1 
+local angle_delta = 10
+local angle_max = 180
+local angle_min = 0
  
 gpio.mode(ledPin,gpio.OUTPUT)
--- Use 400 Hz to control servo, period is 2.5 ms
-duty = pulse/period;
-pwm.setup(servo_p, freq, duty*1023/1000)
-pwm.start(servo_p)
+servo_sg90.servo_sg90_init_proc()
  
-function updateDuty()
+function updateAngle()
     
     gpio.write(ledPin, ledState)
     duty = 100*pulse/period;
-    print("current duty: " .. duty .. "%")
+    print("current angle: " .. servo_sg90.angle_C)
     pwm.setduty(servo_p, math.floor(1024*duty/100))
     if ledState > 0 then
-        pulse = pulse + pulse_delta
-        if pulse > pulse_max then
-            pulse = pulse_max
+        servo_sg90.angle_C = servo_sg90.angle_C + angle_delta
+        if servo_sg90.angle_C >= angle_max then
+            servo_sg90.angle_C = angle_max
             ledState = 0
         end
     else
-        pulse = pulse - pulse_delta
-        if pulse < pulse_min then
-            pulse = pulse_min
+        servo_sg90.angle_C = servo_sg90.angle_C - angle_delta
+        if servo_sg90.angle_C <= angle_min then
+            servo_sg90.angle_C = angle_min
             ledState = 1
         end
     end
     
 end
 
-tmr.alarm(tmr0, 500, tmr.ALARM_AUTO, updateDuty)
+tmr.alarm(tmr0, 1000, tmr.ALARM_AUTO, servo_sg90.servo_sg90_1000ms_proc)
+tmr.alarm(tmr1, 5000, tmr.ALARM_AUTO, updateAngle)
+
+
