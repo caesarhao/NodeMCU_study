@@ -1,5 +1,6 @@
 #! /usr/bin/lua
 -- demo to control servo SG90 using pwm and tmr
+local calsrv = require "calsrv"
 local servo_sg90 = require "servo_sg90"
 local tmr0 = 0
 local tmr1 = 1
@@ -8,11 +9,8 @@ local ledState = 1
 local angle_delta = 10
 local angle_max = 180
 local angle_min = 0
- 
-gpio.mode(ledPin,gpio.OUTPUT)
-servo_sg90.servo_sg90_init_proc()
- 
-function updateAngle()
+
+local function updateAngle()
     
     gpio.write(ledPin, ledState)
     duty = 100*pulse/period;
@@ -34,6 +32,13 @@ function updateAngle()
     
 end
 
+-- initialization
+gpio.mode(ledPin,gpio.OUTPUT)
+calsrv.calsrv_init_proc()
+servo_sg90.servo_sg90_init_proc()
+calsrv.calsrv_initend_proc()
+
+-- start routines
 tmr.alarm(tmr0, 1000, tmr.ALARM_AUTO, servo_sg90.servo_sg90_1000ms_proc)
 tmr.alarm(tmr1, 5000, tmr.ALARM_AUTO, updateAngle)
 

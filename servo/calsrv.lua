@@ -27,6 +27,7 @@ local function fun_ApStaConnected_cb(T)
 end
 
 function calsrv.calsrv_initend_proc()
+	wifi.setmode(wifi.SOFTAP)
 	wifi.ap.config(apcfg)
 	wifi.ap.setip(ipcfg)
 	wifi.ap.dhcp.start()
